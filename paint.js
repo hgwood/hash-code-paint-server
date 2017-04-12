@@ -21,6 +21,29 @@ const logoModel = _(logo.split("\n")).drop(1).take(14).map(function (line, iline
 // console.log(logoModel.length, logoModel[0].length)
 
 app.get("/", function (req, res) {
+  res.json({
+    goal: "paint the black and white image with the minimum number of commands",
+    links: {
+      picture: {
+        what: "the black and white image as a string",
+        href: "/picture",
+        method: "GET"
+      },
+      model: {
+        what: "the black and white image as a matrix of booleans",
+        href: "/model",
+        method: "GET"
+      },
+      solution: {
+        what: "post a solution",
+        href: "/",
+        method: "POST"
+      }
+    }
+  })
+})
+
+app.get("/model", function (req, res) {
   res.send(logoModel).end()
 })
 
@@ -30,8 +53,8 @@ app.get("/picture", function (req, res) {
 
 app.post("/", function (req, res) {
 
-  if (!_.get(req, "body.solution")) return res.status(400).send({message: "missing field solution"}).end()
-  if (!_.get(req, "body.name")) return res.status(400).send({message: "missing field name"}).end()
+  if (!_.get(req, "body.solution")) return res.status(400).send({message: "missing field solution (should be an array)"}).end()
+  if (!_.get(req, "body.name")) return res.status(400).send({message: "missing field name (should be string)"}).end()
 
   const player = req.body.name
 
